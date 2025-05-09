@@ -42,21 +42,20 @@ function show(req, res) {
         }
 
         const movie = movieResults[0]
-        res.json(movie)
-    })
-
-    connection.query(reviewSql, [id], (err, reviewResults) => {
-        if (err) {
-            return res.status(500).json({
-                error: 'Database query failed'
-            })
-        }
 
 
-        const review = reviewResults
-        res.json(review[0])
+        connection.query(reviewSql, [id], (err, reviewResults) => {
+            if (err) {
+                return res.status(500).json({
+                    error: 'Database query failed'
+                })
+            }
 
 
+            movie.reviews = reviewResults
+            res.json(movie)
+
+        })
     })
 
 }
