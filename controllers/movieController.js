@@ -3,7 +3,7 @@ const connection = require('../data/db')
 
 function index(req, res) {
 
-    const sql = 'SELECT * FROM movies;'
+    const sql = 'SELECT movies.*, avg(reviews.vote) as media_voti FROM movies JOIN reviews ON movies.id = reviews.movie_id group by movies.id'
 
     connection.query(sql, (err, results) => {
 
