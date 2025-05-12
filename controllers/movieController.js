@@ -2,9 +2,14 @@ const connection = require('../data/db')
 
 
 function index(req, res) {
+    const { resarc } = req.query
 
-    const sql = 'SELECT movies.*, avg(reviews.vote) as media_voti FROM movies JOIN reviews ON movies.id = reviews.movie_id group by movies.id'
+    let sql = 'SELECT movies.*, avg(reviews.vote) as media_voti FROM movies LEFT JOIN reviews ON movies.id = reviews.movie_id'
+    if (resarc) {
+        sql += ` WHERE title like "%${resarc}%" or director like "%${resarc}%" or abstract like "%${resarc}%"`
+    }
 
+    sql += ` GROUP BY movies.ID`
     connection.query(sql, (err, results) => {
 
         if (err) {
@@ -19,6 +24,7 @@ function index(req, res) {
     })
 
 }
+
 
 function show(req, res) {
 
