@@ -13,7 +13,9 @@ function index(req, res) {
             })
 
         }
-        res.json(results)
+        res.json(results.map(result => ({
+            ...result, imagePath: process.env.PATH_IMG + result.image
+        })))
     })
 
 }
@@ -42,6 +44,7 @@ function show(req, res) {
         }
 
         const movie = movieResults[0]
+
 
 
         connection.query(reviewSql, [id], (err, reviewResults) => {
