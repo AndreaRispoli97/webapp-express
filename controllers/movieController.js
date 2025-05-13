@@ -4,13 +4,16 @@ const connection = require('../data/db')
 function index(req, res) {
     const { resarc } = req.query
 
-    let sql = 'SELECT movies.*, avg(reviews.vote) as media_voti FROM movies LEFT JOIN reviews ON movies.id = reviews.movie_id'
+    const preparedParams = []
+
+    let sql = 'SELECT movies.*, round(avg(reviews.vote),2) as media_voti FROM movies LEFT JOIN reviews ON movies.id = reviews.movie_id'
     if (resarc) {
-        sql += ` WHERE title like "%${resarc}%" or director like "%${resarc}%" or abstract like "%${resarc}%"`
+        sql += ` WHERE title like ? or director like ? or abstract like ?`
+        preparedParams.push(`%${resarc}%`, `%${resarc}%`, `%${resarc}%`)
     }
 
     sql += ` GROUP BY movies.ID`
-    connection.query(sql, (err, results) => {
+    connection.query(sql, preparedParams, (err, results) => {
 
         if (err) {
             return res.status(500).json({
@@ -32,7 +35,7 @@ function show(req, res) {
 
     const sql = 'SELECT * FROM movies WHERE id = ?;'
 
-    const reviewSql = 'SELECT * FROM reviews JOIN movies ON movies.id = reviews.movie_id WHERE movies.id = ?'
+    const reviewSql = 'SELECT * FROM reviews WHERE movie_id = 1'
 
     connection.query(sql, [id], (err, movieResults) => {
 
@@ -62,7 +65,10 @@ function show(req, res) {
 
 
             movie.reviews = reviewResults
-            res.json(movie)
+            res.json({
+                ...movie,
+                imagePath: process.env.PATH_IMG + movie.image
+            })
 
         })
     })
