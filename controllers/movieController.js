@@ -35,7 +35,7 @@ function show(req, res) {
 
     const sql = 'SELECT * FROM movies WHERE id = ?;'
 
-    const reviewSql = 'SELECT * FROM reviews WHERE movie_id = 1'
+    const reviewSql = 'SELECT * FROM reviews WHERE movie_id = ?'
 
     connection.query(sql, [id], (err, movieResults) => {
 
@@ -75,4 +75,31 @@ function show(req, res) {
 
 }
 
-module.exports = { index, show }
+
+function storeReview(req, res) {
+
+    const { id } = req.params;
+
+    console.log(req.body);
+
+    const { name, vote, text } = req.body;
+
+    const sql = `INSERT INTO reviews(movie_id, name, vote, text)
+    VALUES ( ? , ? , ? , ? )`
+
+    connection.query(sql, [id, name, vote, text], (err, results) => {
+
+        if (err) {
+            return res.status(500).json({
+                errorMessage: err.sqlMessage
+            })
+        }
+        return res.status(201).json({
+            messagge: results
+        })
+
+    })
+
+}
+
+module.exports = { index, show, storeReview }
