@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/movies', moviesRouter)
-
+app.post('/api/movies', moviesRouter);
 
 app.use(handleError);
 app.use(notFound);

@@ -90,12 +90,13 @@ function storeReview(req, res) {
     connection.query(sql, [id, name, vote, text], (err, results) => {
 
         if (err) {
+
             return res.status(500).json({
-                errorMessage: err.sqlMessage
+                errorMessage: err
             })
         }
         return res.status(201).json({
-            messagge: results
+            message: results
         })
 
     })
