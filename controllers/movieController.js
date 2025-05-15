@@ -1,5 +1,5 @@
 const connection = require('../data/db')
-
+const slugify = require('slugify')
 
 function index(req, res) {
     const { resarc } = req.query
@@ -83,10 +83,16 @@ function storeMovie(req, res) {
     const imageName = req.file.filename;
     console.log(imageName)
 
-    const sql = `INSERT INTO movies(title, director, abstract, image)
-    VALUES ( ? , ? , ? , ? )`
+    const sql = `INSERT INTO movies(title, director, abstract, image, slug)
+    VALUES ( ? , ? , ? , ? , ? )`
 
-    connection.query(sql, [title, director, abstract, imageName], (err, results) => {
+
+    const slug = slugify(title, {
+        lower: true,
+        trim: true
+    })
+
+    connection.query(sql, [title, director, abstract, imageName, slug], (err, results) => {
         console.log(results)
         if (err) {
 
