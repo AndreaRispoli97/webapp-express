@@ -16,6 +16,7 @@ function index(req, res) {
     connection.query(sql, preparedParams, (err, results) => {
 
         if (err) {
+            console.log(err)
             return res.status(500).json({
                 errorMessage: 'Error connection'
             })
