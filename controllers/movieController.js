@@ -76,6 +76,35 @@ function show(req, res) {
 }
 
 
+function storeMovie(req, res) {
+
+    const { title, director, abstract } = req.body
+
+    const imageName = req.file.filename;
+    console.log(imageName)
+
+    const sql = `INSERT INTO movies(title, director, abstract, image)
+    VALUES ( ? , ? , ? , ? )`
+
+    connection.query(sql, [title, director, abstract, imageName], (err, results) => {
+        console.log(results)
+        if (err) {
+
+            return res.status(500).json({
+                errorMessage: err
+            })
+        }
+        return res.status(201).json({
+            message: results
+        })
+
+    })
+
+
+
+
+}
+
 function storeReview(req, res) {
 
     const { id } = req.params;
@@ -103,4 +132,4 @@ function storeReview(req, res) {
 
 }
 
-module.exports = { index, show, storeReview }
+module.exports = { index, show, storeReview, storeMovie }
