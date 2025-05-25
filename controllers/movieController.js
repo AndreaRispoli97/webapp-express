@@ -34,7 +34,7 @@ function show(req, res) {
 
     const { id } = req.params
 
-    const sql = 'SELECT * FROM movies WHERE id = ?;'
+    const sql = 'SELECT * FROM movies WHERE slug = ?;'
 
     const reviewSql = 'SELECT * FROM reviews WHERE movie_id = ?'
 
@@ -57,7 +57,7 @@ function show(req, res) {
 
 
 
-        connection.query(reviewSql, [id], (err, reviewResults) => {
+        connection.query(reviewSql, [movie.id], (err, reviewResults) => {
             if (err) {
                 return res.status(500).json({
                     error: 'Database query failed'
